@@ -12,7 +12,17 @@ class Expense extends Model
     /**
      * @var array
      */
-    protected $fillable = ['description', 'amount', 'type'];
+    protected $fillable = ['description', 'amount', 'type', 'user_id'];
+
+    public function getAmountAttribue()
+    {
+        return $this->attributes['amount'] / 100;
+    }
+
+    public function setAmountAttribue()
+    {
+        return $this->attributes['amount'] * 100;
+    }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
