@@ -17,9 +17,9 @@ class CreatePlansTable extends Migration
             $table->id();
             $table->string('name');
             $table->string('description')->nullable();
-            $table->integer('price');
+            $table->decimal('price', 10, 2);
             $table->string('slug');
-            $table->string('references');
+            $table->string('reference');
             $table->timestamps();
         });
     }
