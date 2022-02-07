@@ -14,6 +14,7 @@
             <th class="px-4 py-2">#</th>
             <th class="px-4 py-2">Descrição</th>
             <th class="px-4 py-2">Valor</th>
+            <th class="px-4 py-2">Foto do Comprovante</th>
             <th class="px-4 py-2">Data Registro</th>
             <th class="px-4 py-2">Ações</th>
         </tr>
@@ -21,6 +22,7 @@
 
         <tbody>
         @foreach($expenses as $key => $exp)
+
             <tr @if($key % 2) class="bg-gray-200" @endif>
                 <td class="px-4 py-2 border">{{$exp->id}}</td>
                 <td class="px-4 py-2 border">{{$exp->description}}</td>
@@ -28,7 +30,12 @@
                     <span
                         class="@if($exp->type == 1) text-green-600 @else text-red-600 @endif">R$ {{number_format($exp->amount, 2, ',', '.')}} </span>
                 </td>
-                <td class="px-4 py-2 border">{{$exp->created_at->format('d/m/Y H:i:s')}}</td>
+                <td class="px-4 py-2 border">
+                    @if($exp->photo )
+                        <img src="/storage/{{$exp->photo}}" alt="Comprovante {{$exp->photo}}" width="50px" height="50px" style="border-radius:50px">
+                    @endif
+                </td>
+                <td class="px-4 py-2 border">{{$exp->expense_date ? $exp->expense_date->format('d/m/Y H:i:s') : $exp->created_at->format('d/m/Y H:i:s')}}</td>
                 <td class="px-4 py-4 border">
                     <a href="{{route('expenses.edit', $exp->id)}}" class="btn-sm btn-primary">Editar</a>
                     <a href="#"
