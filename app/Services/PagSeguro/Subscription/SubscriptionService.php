@@ -3,6 +3,7 @@
 
 namespace App\Services\PagSeguro\Subscription;
 
+use App\Services\PagSeguro\Credentials;
 use Illuminate\Support\Facades\Http;
 
 class SubscriptionService
@@ -16,10 +17,7 @@ class SubscriptionService
 
     public function makeSubscription()
     {
-        $email = config('pagseguro.email');
-        $token = config('pagseguro.token');
-
-        $url = "https://ws.sandbox.pagseguro.uol.com.br/pre-approvals?email={$email}&token={$token}";
+    $url = Credentials::getCredentials('/pre-approvals');
 
         $response = Http::withHeaders([
             'Content-Type' => 'application/json',
@@ -33,7 +31,7 @@ class SubscriptionService
                     'hash' => $this->data['senderHash'],
                     'phone' => [
                         'areaCode' => '98',
-                        'number'   => '984283432'
+                        'number' => '984283432'
                     ],
                     'address' => [
                         'street' => 'Rua Teste',
@@ -48,7 +46,7 @@ class SubscriptionService
                     'documents' => [
                         [
                             'type' => 'CPF',
-                            'value' => ''
+                            'value' => '01310046620'
                         ]
                     ]
                 ],
@@ -62,7 +60,7 @@ class SubscriptionService
                             'documents' => [
                                 [
                                     'type' => 'CPF',
-                                    'value' => ''
+                                    'value' => '01310046620'
                                 ]
                             ],
                             'billingAddress' => [
@@ -77,14 +75,14 @@ class SubscriptionService
                             ],
                             'phone' => [
                                 'areaCode' => '98',
-                                'number'   => '984283432'
+                                'number' => '984283432'
                             ]
                         ]
 
                     ]
                 ]
             ]);
-
-        return $response->json();
+        $response = (new SubscriptionReaderService())->getSubscriptionByCode($response->json()['code']);
+        return $response;
     }
 }

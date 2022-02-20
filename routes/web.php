@@ -3,6 +3,7 @@
 use App\Http\Livewire\Expense\ExpenseCreate;
 use App\Http\Livewire\Expense\ExpenseList;
 use App\Http\Livewire\Expense\ExpenseEdit;
+use App\Http\Livewire\Payment\CreditCard;
 use App\Http\Livewire\Plan\PlanCreate;
 use App\Http\Livewire\Plan\PlanList;
 use Illuminate\Support\Facades\File;
@@ -37,8 +38,17 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
         })->name('.photo');
     });
 
-    Route::prefix('plans')->name('plans.')->group(function() {
+    Route::prefix('plans')->name('plans.')->group(function () {
         Route::get('/', PlanList::class)->name('index');
         Route::get('/create', PlanCreate::class)->name('create');
     });
+});
+
+Route::get('/subscription', CreditCard::class)->name('plan.subscription');
+Route::get('/notification', function () {
+    $code = "13EE1FD8DBE5DBE5EAF774282F893C157E8C";
+    $sub = (new \App\Services\PagSeguro\Subscription\SubscriptionReaderService())->getSubscriptionByNotificationCode($code);
+
+    dd($sub);
+
 });
